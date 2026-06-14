@@ -109,7 +109,7 @@ rules in `references/site-architecture.md` and `references/mobile-desktop.md`.
 - **ffmpeg** — extracts JPEG frames. `brew install ffmpeg` (Mac).
 - **Google AI Studio** — Nano Banana Pro images (free). Key at https://aistudio.google.com/apikey
   → `export GOOGLE_AI_STUDIO_KEY="AIza..."`.
-- **WaveSpeed** — Kling video (~$0.42–0.56 / 5s). Key at https://wavespeed.ai/settings →
+- **WaveSpeed** — Kling video (~$0.42–0.56 per clip; 3s default). Key at https://wavespeed.ai/settings →
   `export WAVESPEED_API_KEY="..."`.
 - **Vercel** — free deploy. `npm i -g vercel && vercel login`.
 
@@ -145,8 +145,8 @@ contextual environments); no default white backgrounds; only generate the FIRST 
 animates better from a single image + prompt).
 
 ### Cost check (ALWAYS show before any paid call)
-- Image (Nano Banana Pro): **free**. Video (Kling/WaveSpeed): **~$0.42–0.56 / 5s** (10s = double).
-  Deploy (Vercel): free. Typical total per site: **~$0.50–1.50**.
+- Image (Nano Banana Pro): **free**. Video (Kling/WaveSpeed): **~$0.42–0.56 per clip** (3s default;
+  longer clips cost more). Deploy (Vercel): free. Typical total per site: **~$0.50–1.50**.
 - Ask: "Ready to proceed? This will cost approximately $X on WaveSpeed." Wait for confirmation.
 
 ### 2b. Generate image (Nano Banana Pro)
@@ -156,8 +156,9 @@ with `contents:[{parts:[{text: prompt}]}]` and `generationConfig:{responseModali
 ### 2c. Animate (Kling via WaveSpeed)
 Default **Kling O3 Pro** (`kwaivgi/kling-video-o3-pro/image-to-video`, ~$0.56). Output resolution
 matches the input image — resize the source to **1920×1080** for 1080p (default) before uploading.
-Upload to litterbox (24h), submit with `{ image, prompt, duration: 5, cfg_scale: 0.7, sound: false }`,
-poll `…/predictions/{id}/result` every 15s, download to `public/assets/`.
+Upload to litterbox (24h), submit with `{ image, prompt, duration: 3, cfg_scale: 0.7, sound: false }`,
+poll `…/predictions/{id}/result` every 15s, download to `public/assets/`. **Default clip length is
+3 seconds** — keep `duration: 3` unless the user explicitly asks for a longer clip.
 
 ### Extract frames
 `ffmpeg -i video.mp4 -vf "fps=24,scale=1280:720" -q:v 4 public/assets/frames/frame-%04d.jpg`
